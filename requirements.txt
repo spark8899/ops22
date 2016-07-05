@@ -1,0 +1,8 @@
+django~=1.7.0
+django-crispy-forms~=1.4.0
+django-reversion~=1.8.0
+httplib2
+xlwt
+xlsxwriter
+#django-xadmin
+#pip install git+git://github.com/sshwsfc/django-xadmin.git
