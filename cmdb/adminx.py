@@ -88,7 +88,7 @@ class HostAdmin(object):
     #open_web.allow_tags = True
     #open_web.is_column = True
 
-    list_display = ('name', 'bip', 'mip', 'vip', 'service_type',
+    list_display = ('name', 'mip', 'bip', 'vip', 'service_type',
                     'status', 'description')
     list_display_links = ('name',)
 

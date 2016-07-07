@@ -100,39 +100,46 @@ TIME_FORMAT = 'H:i'
 
 SITE_ID = 1
 
-# A sample logging configuration. The only tangible logging
-# performed by this configuration is to send an email to
-# the site admins on every HTTP 500 error when DEBUG=False.
-# See http://docs.djangoproject.com/en/dev/topics/logging for
-# more details on how to customize your logging configuration.
+
+
+MY_IGNORED_WARNINGS = {
+    'RemovedInDjango18Warning: `PublisherManager.get_query_set`',
+    'RemovedInDjango18Warning: `PageManager.get_query_set`',
+    'RemovedInDjango18Warning: `CMSChangeList.get_query_set`',
+    'form PagePermissionInlineAdminForm needs updating',
+    'form ViewRestrictionInlineAdminForm needs updating',
+    'form PageUserForm needs updating',
+    '/xadmin/views/form_view.py:129: RemovedInDjango18Warning: commit_on_success is deprecated in favor of atomic.',
+    'RemovedInDjango18Warning: `PagePermissionInlineAdmin.queryset',
+    'RemovedInDjango18Warning: `ViewRestrictionInlineAdmin.queryset`',
+    'RemovedInDjango18Warning: `PageUserAdmin.queryset`',
+
+}
+
+def filter_djangocms_warnings(record):
+    for ignored in MY_IGNORED_WARNINGS:
+        if ignored in record.args[0]:
+            return False
+    return True
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
-    'filters': {
-        'require_debug_false': {
-            '()': 'django.utils.log.RequireDebugFalse'
-        }
-    },
     'handlers': {
-        'mail_admins': {
-            'level': 'ERROR',
-            'filters': ['require_debug_false'],
-            'class': 'django.utils.log.AdminEmailHandler'
-        },
         'console': {
-            'level': 'DEBUG',
-            'class': 'logging.StreamHandler'
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'filters': {
+        'ignore_djangocms_warnings': {
+            '()': 'django.utils.log.CallbackFilter',
+            'callback': filter_djangocms_warnings,
         },
     },
     'loggers': {
-        'django.request': {
-            'handlers': ['mail_admins'],
-            'level': 'ERROR',
-            'propagate': True,
-        },
-        # 'django.db.backends': {
-        #     'handlers': ['console'],
-        #     'level': 'DEBUG',
-        # }
-    }
+        'py.warnings': {
+            'handlers': ['console', ],
+            'filters': ['ignore_djangocms_warnings', ],
+        }
+    },
 }

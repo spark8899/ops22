@@ -1,19 +1,37 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import argparse
-import sys
-import json
+
+import os, sys, json
+import json, time, threading, argparse
+
+proj_path = "/root/ops"
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ops.settings")
+sys.path.append(proj_path)
+
+os.chdir(proj_path)
+
+from django.core.wsgi import get_wsgi_application
+application = get_wsgi_application()
+
+from cmdb.models import *
+
+
 def lists():
     r = {}
-    h = [ '172.17.42.10' + str(i) for i in range(1,4) ]
-    hosts = {'hosts': h}
-    r['docker'] = hosts
+    for item in SERVICE_TYPES:
+        service_type = item[0]
+        host_list = Host.objects.filter(service_type=service_type)
+        h = [ host.name for host in host_list ]
+        hosts = {'hosts': h}
+        r[service_type] = hosts
     return json.dumps(r, indent=4)
 
 def hosts(name):
-    r = {'ansible_ssh_pass': '123456'}
-    cpis = dict(r.items())
-    return json.dumps(qa)
+    host = Host.objects.get(name=name)
+    r = {'ansible_ssh_host': host.mip}
+    inventory = dict(r.items())
+    return json.dumps(inventory)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

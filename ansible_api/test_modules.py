@@ -9,16 +9,19 @@ import json
 # the fastest way to set up the inventory
 
 # hosts list
-hosts = ["localhost"]
+# hosts = ["localhost"]
 # set up the inventory, if no group is defined then 'all' group is used by default
-example_inventory = ansible.inventory.Inventory(hosts)
+#example_inventory = ansible.inventory.Inventory(hosts)
+
+host_list = "/root/ops/ansible_api/hosts.py"
 
 pm = ansible.runner.Runner(
+    host_list = host_list,
     module_name = 'command',
     module_args = 'uname -a',
     timeout = 5,
-    inventory = example_inventory,
-    subset = 'all' # name of the hosts group 
+    subset = 'codis' # name of the hosts group 
+    #inventory = example_inventory,
     )
 
 out = pm.run()

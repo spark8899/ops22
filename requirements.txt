@@ -4,5 +4,6 @@ django-reversion~=1.8.0
 httplib2
 xlwt
 xlsxwriter
+ansible~=1.9.0
 #django-xadmin
 #pip install git+git://github.com/sshwsfc/django-xadmin.git
