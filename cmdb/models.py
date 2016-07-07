@@ -8,13 +8,18 @@ SERVER_STATUS = (
     (3, u"Error"),
 )
 SERVICE_TYPES = (
-    ('nginx', u"Nginx"),
-    ('tomcat', u"Tomcat"),
-    ('mysql', u"mysql"),
-    ('logstash', u"logstash"),
     ('app', u"app"),
+    ('job', u"job"),
+    ('mysql', u"mysql"),
+    ('codis', u"codis"),
     ('zookeeper', u"zookeeper"),
+    ('dubbo', u"dubbo"),
+    ('lts', u"lts"),
+    ('rocketmq', u"rocketmq"),
+    ('elk', u"elk"),
+    ('cat', u"cat"),
     ('fastdfs', u"fastdfs"),
+    ('nginx', u"nginx"),
 )
 
 
@@ -46,7 +51,7 @@ class Host(models.Model):
     vip = models.GenericIPAddressField(blank=True, null=True)
     status = models.SmallIntegerField(u"状态", choices=SERVER_STATUS, default=0)
 
-    core_num = models.SmallIntegerField(choices=[(i * 2, "%s Cores" % (i * 2)) for i in range(1, 19)])
+    core_num = models.SmallIntegerField(choices=[(i * 2, "%s Cores" % (i * 2)) for i in range(1, 19)], default=2)
     hard_disk = models.IntegerField(blank=True, null=True)
     memory = models.IntegerField(blank=True, null=True)
 

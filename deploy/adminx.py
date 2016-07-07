@@ -18,6 +18,19 @@ import pprint
 
 from django.utils.safestring import mark_safe
 from xadmin.views.page import PageView, FormPage
+from django.contrib import messages
+
+import os
+
+class TestPage1(PageView):
+    verbose_name = u'PageView1(基本)'
+    app_label = 'app'
+    menu_group = 'test_group'
+
+    def get_content(self):
+        return 'OK'
+
+site.register_page(TestPage1)
 
 class TestPage2(PageView):
     verbose_name = u'PageView2(带ajax页链接)'
@@ -42,25 +55,11 @@ class TestPage3(PageView):
 site.register_page(TestPage3)
 
 
-class MyAdminView(PageView):
-    verbose_name = u'测试'
-    app_label = 'app'
-
-    def get_media(self):
-        media = self.vendor('xadmin.plugin.quick-form.js', 'xadmin.form.css')
-        return media
-
-    def get_content(self):
-        return mark_safe('<a data-refresh-url="/page/testpage2/" href="/page/testpage3" class="ajaxform-handler" title="测试AjaxForm">GO</a>')
-
-site.register_page(MyAdminView)
-
-
 class MyForm(forms.Form):
     account = forms.IntegerField(label=u'选择账户', required=True)
     charge_time = forms.DateField(label=u'支付时间', required=True, widget=xadmin.widgets.DateWidget)
     test = forms.MultipleChoiceField(choices=[('a','a'),('b','b')],help_text='按住Ctrl键多选')
-    #test2 = MultiSelectFormField(choices=[('a','aaaa'),('b','bbbb'),('c','cccc'),('d','dddd')])
+    #test2 = forms.MultiSelectFormField(choices=[('a','aaaa'),('b','bbbb'),('c','cccc'),('d','dddd')])
 
 
 class FormPage1(FormPage):
@@ -79,55 +78,45 @@ class FormPage1(FormPage):
         
     def save_forms(self):
         print self.form_obj.cleaned_data
-    
-xadmin.site.register_page(FormPage1)
+
+site.register_page(FormPage1)
 
 
-#class MyAdminView(CommAdminView):
-#
-#    title = u"测试"
-#    icon = None
-#
-#    @filter_hook
-#    def get_title(self):
-#        return self.title
-#
-#    def get_page_id(self):
-#        return self.request.path
-#
-#    def get_portal_key(self):
-#        return "dashboard:%s:pos" % self.get_page_id()
-#
-#    @filter_hook
-#    def get_breadcrumb(self):
-#        return [{
-#            'url': self.get_admin_url('index'),
-#            'title': _('Home')
-#            },
-#            {'url': self.get_admin_url('my_test'),
-#            'title': self.get_title()
-#            }]
-#
-#    @filter_hook
-#    def get_context(self):
-#        new_context = {
-#            'title': self.get_title(),
-#            'icon': self.icon,
-#            'portal_key': self.get_portal_key(),
-#            #'columns': ["sss"],
-#            'content': '<a href="dfsf">',
-#        }
-#        context = super(MyAdminView, self).get_context()
-#        context.update(new_context)
-#        #pprint.pprint(dir(context['admin_view']))
-#        pprint.pprint(dir(context['admin_view']))
-#        return context
-#
-#    @never_cache
-#    def get(self, request, *args, **kwargs):
-#        return self.template_response('xadmin/base_site.html', self.get_context())
-#
-#site.register_view(r'^me_test/$', MyAdminView, name='my_test')
+class TForm(forms.Form):
+    input = forms.CharField(label='please input', max_length=60)
+    res = forms.CharField(widget=forms.HiddenInput(), required=False)
+    #res = forms.CharField(label=u'执行结果：', widget=forms.Textarea(attrs={'readonly':'readonly'}), required=False)
+
+
+class MyAdminView(FormPage):
+    app_label = 'app'
+    verbose_name = 'MyFormPage1'
+    form = TForm
+    #form.fields['res'].widget = forms.HiddenInput()
+    #print dir(form.hidden_fields)
+
+    #def message_user(self, message, level='info'):
+    #    """
+    #    Send a message to the user. The default implementation
+    #    posts a message using the django.contrib.messages backend.
+    #    """
+    #    if hasattr(messages, level) and callable(getattr(messages, level)):
+    #        getattr(messages, level)(self.request, message)
+
+    def save_forms(self):
+        print dir(self.form_obj)
+        #print self.form_obj.as_table()
+        #print self.form_obj.cleaned_data
+        #print self.form_obj.initial
+        ss = os.popen("""python scripts/test.py""").read()
+        #print ss
+        self.form_obj.fields['res'] = forms.CharField(label=u'执行结果', widget=forms.Textarea(attrs={'readonly':'readonly'}))
+        self.form_obj.cleaned_data['res'] = 234
+        print self.form_obj.files.values()
+        print self.form_obj.cleaned_data
+        #self.message_user(ss)
+
+site.register_page(MyAdminView)
 
 
 class DeployAdmin(object):

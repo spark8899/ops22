@@ -46,7 +46,13 @@ class GlobalSetting(object):
             )},
             {'title': '部署管理', 'perm': self.get_model_perm(Deploy, 'change'), 'menus':(
                 {'title':'线上发布','url': self.get_model_url(Deploy, 'changelist')},
-                {'title':'测试','url': "/page/myadminview/"},
+            )},
+            {'title': '页面测试', 'perm': '', 'menus':(
+                {'title':'测试页面1','url': "/page/testpage1/"},
+                {'title':'测试页面2','url': "/page/testpage2/"},
+                {'title':'测试页面3','url': "/page/testpage3/"},
+                {'title':'测试表单','url': "/page/formpage1/"},
+                {'title':'我的自定义页面','url': "/page/myadminview/"},
             )},
         )
     menu_style = 'default'#'accordion'
