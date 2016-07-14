@@ -35,7 +35,7 @@ def hosts(name):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-1', '--list', help='hosts list', action='store_true')
+    parser.add_argument('-l', '--list', help='hosts list', action='store_true')
     parser.add_argument('-H', '--host', help='hosts vars')
     args = vars(parser.parse_args())
 

@@ -5,5 +5,6 @@ httplib2
 xlwt
 xlsxwriter
 ansible~=1.9.0
+MySQL-python
 #django-xadmin
 #pip install git+git://github.com/sshwsfc/django-xadmin.git

@@ -34,9 +34,12 @@ trusted-host=mirrors.aliyun.com
 2. setting Mysql 
 
 ```bash
-mysql> create database ops;
-mysql> grant all on ops.table to ops@localhost;
-mysql> set password for ops@localhost = password('xxxxx');
+yum install mysql mysql-devel
+docker run -d --restart=always --name mysql -v /home/mysql:/var/lib/mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123456 -e TZ="Asia/Shanghai" mysql:5.6.30
+
+mysql -uroot -p123456 -h localhost
+mysql> CREATE DATABASE IF NOT EXISTS ops COLLATE utf8_general_ci;  
+mysql> GRANT all privileges on ops.* to ops@'%' identified by '123456';
 mysql> flush privileges;
 
 # cat ops/settings.py

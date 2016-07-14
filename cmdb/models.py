@@ -45,7 +45,7 @@ class IDC(models.Model):
 
 class Host(models.Model):
     idc = models.ForeignKey(IDC)
-    name = models.CharField(u"主机名", max_length=64)
+    name = models.CharField(u"主机名", max_length=64, db_index=True)
     mip = models.GenericIPAddressField(blank=True, null=True, help_text="manager IP")
     bip = models.GenericIPAddressField(blank=True, null=True, help_text="business IP")
     vip = models.GenericIPAddressField(blank=True, null=True)
@@ -58,7 +58,7 @@ class Host(models.Model):
     system = models.CharField(u"System OS", max_length=32, choices=[(i, i) for i in (u"centOS7.2", u"rh6.5", u"windows")], default="centOS7.2")
 
     create_time = models.DateField(auto_now=True)
-    service_type = models.CharField(max_length=32, choices=SERVICE_TYPES)
+    service_type = models.CharField(max_length=32, choices=SERVICE_TYPES, db_index=True)
     description = models.TextField(u"备注", blank=True, null=True)
 
     def __unicode__(self):
