@@ -53,6 +53,7 @@ class GlobalSetting(object):
                 {'title':'测试页面3','url': "/page/testpage3/"},
                 {'title':'测试表单','url': "/page/formpage1/"},
                 {'title':'我的自定义页面','url': "/page/myadminview/"},
+                {'title':'ansible','url': "/ansible/"},
             )},
         )
     menu_style = 'default'#'accordion'
@@ -210,30 +211,8 @@ class AccessRecordAdmin(object):
         return obj.date.strftime("%B")
 
 
-#class DeployAdmin(object):
-#    list_display = ('name', 'deploy_time', 'version', 'disconf', 'lts', 'mq', 'description')
-#    list_editable = ('deploy_time', 'version', 'description')
-#    list_display_links = ('name',)
-#    show_detail_fields = ("description")
-#    show_all_rel_details = ("xxxxx")
-#    relfield_style = 'fk-ajax'
-#    wizard_form_list = [
-#        ('First\'s Form', ('name', 'deploy_time', 'version', 'description')),
-#        ('Second Form', ('db', 'disconf', 'lts', 'mq')),
-##        ('Thread Form', ('customer_id',))
-#    ]
-#
-#    search_fields = ['name']
-#    relfield_style = 'fk-ajax'
-#    reversion_enable = True
-#
-##    actions = [BatchChangeAction, ]
-##    batch_fields = ('contact', 'create_time')
-        
-
 xadmin.site.register(Host, HostAdmin)
 xadmin.site.register(HostGroup, HostGroupAdmin)
 xadmin.site.register(MaintainLog, MaintainLogAdmin)
 xadmin.site.register(IDC, IDCAdmin)
 xadmin.site.register(AccessRecord, AccessRecordAdmin)
-#xadmin.site.register(Deploy, DeployAdmin)

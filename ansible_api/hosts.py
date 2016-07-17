@@ -19,18 +19,25 @@ from cmdb.models import *
 
 def lists():
     r = {}
+    hostvars = {}
     for item in SERVICE_TYPES:
         service_type = item[0]
         host_list = Host.objects.filter(service_type=service_type)
         h = [ host.name for host in host_list ]
-        hosts = {'hosts': h}
+        hosts = {'hosts': h, 'vars': {"ansible_ssh_user": "root", "ansible_ssh_private_key_file": "/root/.ssh/id_rsa"}}
+        for host in host_list:
+           hostvars[host.name] = {"ansible_ssh_host": host.mip}
         r[service_type] = hosts
+    r['_meta'] = {'hostvars': hostvars}
     return json.dumps(r, indent=4)
 
 def hosts(name):
-    host = Host.objects.get(name=name)
-    r = {'ansible_ssh_host': host.mip}
-    inventory = dict(r.items())
+
+    #host = Host.objects.get(name=name)
+    #r = {'ansible_ssh_host': host.mip}
+    #inventory = dict(r.items())
+
+    inventory = {'_meta': {'hostvars': {}}}
     return json.dumps(inventory)
 
 if __name__ == '__main__':
